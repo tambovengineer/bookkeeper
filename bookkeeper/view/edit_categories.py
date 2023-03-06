@@ -2,7 +2,7 @@ from PySide6 import QtWidgets, QtCore
 
 
 class EditCategoriesWidget(QtWidgets.QDialog):
-    def __init__(self,  *args, **kwargs):
+    def __init__(self, categories_list, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.setWindowTitle("Изменение категорий")
@@ -11,7 +11,8 @@ class EditCategoriesWidget(QtWidgets.QDialog):
         self.setLayout(self.layout)
 
         self.layout.addWidget(QtWidgets.QLabel("Категория для удаления"))
-        self.categories_list = ["Продукты", "Книги", "Транспорт"]
+        #self.categories_list = ["Продукты", "Книги", "Транспорт"]
+        self.categories_list = categories_list
         self.categories_list_widget = QtWidgets.QComboBox()
         self.categories_list_widget.addItems(self.categories_list)
         self.layout.addWidget(self.categories_list_widget)
@@ -54,6 +55,7 @@ class EditCategoriesWidget(QtWidgets.QDialog):
 
         if ret == QtWidgets.QMessageBox.Ok:
             self.categories_list_widget.removeItem(self.categories_list_widget.currentIndex())
+            self.categories_list.pop(self.categories_list_widget.currentIndex())
 
     def add_click(self):
         txt = self.edit_box.text()
@@ -85,3 +87,4 @@ class EditCategoriesWidget(QtWidgets.QDialog):
         msgBox.exec()
 
         self.categories_list_widget.addItem(self.edit_box.text())
+        self.categories_list.append(self.edit_box.text())
