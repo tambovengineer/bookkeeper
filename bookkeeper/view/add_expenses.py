@@ -30,4 +30,6 @@ class AddExpensesWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.edit_button, 1, 2)
 
     def edit_button_click(self):
-        EditCategoriesWidget().exec()
+        EditCategoriesWidget(self.categories_list).exec()
+        self.categories_list_widget.clear()
+        self.categories_list_widget.addItems(self.categories_list)
