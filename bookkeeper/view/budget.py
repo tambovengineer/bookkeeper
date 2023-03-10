@@ -8,6 +8,8 @@ class BudgetWidget(QtWidgets.QTableWidget):
         column_headers = "Сумма Бюджет".split()
         row_headers = "День Неделя Месяц".split()
 
+        self.setFixedHeight(100)
+
         self.setColumnCount(len(column_headers))
         self.setRowCount(len(row_headers))
 
