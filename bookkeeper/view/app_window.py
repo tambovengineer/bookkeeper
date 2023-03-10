@@ -11,7 +11,7 @@ class MainWindow(QtWidgets.QWidget):
         super().__init__(*args, **kwargs)
 
         self.setWindowTitle("Bookkeeper")
-        # self.setFixedSize(600, 600)
+        self.setFixedSize(600, 700)
 
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
@@ -27,8 +27,3 @@ class MainWindow(QtWidgets.QWidget):
         self.add_expenses_widget = AddExpensesWidget()
         self.layout.addWidget(self.add_expenses_widget)
 
-
-app = QtWidgets.QApplication(sys.argv)
-window = MainWindow()
-window.show()
-app.exec()
