@@ -1,5 +1,4 @@
 from PySide6 import QtWidgets
-from bookkeeper.view.edit_categories import EditCategoriesWidget
 
 
 class AddExpensesWidget(QtWidgets.QWidget):
@@ -12,6 +11,7 @@ class AddExpensesWidget(QtWidgets.QWidget):
         self.layout.addWidget(QtWidgets.QLabel("Сумма"), 0, 0)
         self.layout.addWidget(QtWidgets.QLabel("Комментарий"), 1, 0)
         self.layout.addWidget(QtWidgets.QLabel("Категория"), 2, 0)
+        self.layout.addWidget(QtWidgets.QLabel("Название новой категории"), 4, 0)
 
         self.edit_box = QtWidgets.QLineEdit()
         self.edit_box.setPlaceholderText("0")
@@ -23,22 +23,29 @@ class AddExpensesWidget(QtWidgets.QWidget):
         self.categories_list_widget = QtWidgets.QComboBox()
         self.categories_list_widget.addItems(self.categories_list)
 
-        self.add_button = QtWidgets.QPushButton("Добавить")
-        self.edit_expense_button = QtWidgets.QPushButton("Исправить")
-        self.del_button = QtWidgets.QPushButton("Удалить")
+        self.add_button = QtWidgets.QPushButton("Добавить запись")
+        self.edit_expense_button = QtWidgets.QPushButton("Исправить запись")
+        self.del_button = QtWidgets.QPushButton("Удалить запись")
 
-        self.edit_button = QtWidgets.QPushButton("Редактировать")
-        self.edit_button.clicked.connect(self.edit_button_click)
+        self.add_comment_button = QtWidgets.QPushButton("Добавить категорию")
+        self.edit_comment_button = QtWidgets.QPushButton("Исправить категорию")
+        self.del_comment_button = QtWidgets.QPushButton("Удалить категорию")
 
-        self.layout.addWidget(self.edit_box, 0, 1)
-        self.layout.addWidget(self.edit_comment_box, 1, 1)
-        self.layout.addWidget(self.categories_list_widget, 2, 1)
+        self.help_button = QtWidgets.QPushButton("Справка...")
+        self.help_button.setDefault(True)
+
+        self.edit_category_box = QtWidgets.QLineEdit()
+        self.edit_category_box.setPlaceholderText("Разное")
+
+        self.layout.addWidget(self.edit_box, 0, 1, 1, 3)
+        self.layout.addWidget(self.edit_comment_box, 1, 1, 1, 3)
+        self.layout.addWidget(self.categories_list_widget, 2, 1, 1, 3)
         self.layout.addWidget(self.add_button, 3, 1)
-        self.layout.addWidget(self.edit_button, 2, 2)
-        self.layout.addWidget(self.edit_expense_button, 4, 1)
-        self.layout.addWidget(self.del_button, 5, 1)
+        self.layout.addWidget(self.edit_expense_button, 3, 2)
+        self.layout.addWidget(self.del_button, 3, 3)
+        self.layout.addWidget(self.edit_category_box, 4, 1, 1, 3)
+        self.layout.addWidget(self.add_comment_button, 5, 1)
+        self.layout.addWidget(self.edit_comment_button, 5, 2)
+        self.layout.addWidget(self.del_comment_button, 5, 3)
 
-    def edit_button_click(self):
-        EditCategoriesWidget(self.categories_list).exec()
-        self.categories_list_widget.clear()
-        self.categories_list_widget.addItems(self.categories_list)
+        self.layout.addWidget(self.help_button, 6, 3)
