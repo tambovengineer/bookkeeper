@@ -1,5 +1,3 @@
-import sys
-
 from PySide6 import QtWidgets
 from bookkeeper.view.budget import BudgetWidget
 from bookkeeper.view.recent_expenses import RecentExpensesWidget
@@ -11,7 +9,7 @@ class MainWindow(QtWidgets.QWidget):
         super().__init__(*args, **kwargs)
 
         self.setWindowTitle("Bookkeeper")
-        self.setFixedSize(600, 700)
+        self.setFixedSize(600, 800)
 
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
@@ -26,4 +24,3 @@ class MainWindow(QtWidgets.QWidget):
 
         self.add_expenses_widget = AddExpensesWidget()
         self.layout.addWidget(self.add_expenses_widget)
-
