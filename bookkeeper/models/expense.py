@@ -2,7 +2,7 @@
 Описан класс, представляющий расходную операцию
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 
 
@@ -17,9 +17,9 @@ class Expense:
     comment - комментарий
     pk - id записи в базе данных
     """
-    amount: int
-    category: int
-    expense_date: datetime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    added_date:   datetime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    amount: float = 0.0
+    category: int = 0
+    expense_date: str = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    added_date:   str = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     comment: str = ''
     pk: int = 0
