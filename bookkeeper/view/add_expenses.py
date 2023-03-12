@@ -1,5 +1,5 @@
 """Модуль виджета редактирования категорий и записей о расходах"""
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore
 
 
 class AddExpensesWidget(QtWidgets.QWidget):
@@ -13,7 +13,8 @@ class AddExpensesWidget(QtWidgets.QWidget):
         layout.addWidget(QtWidgets.QLabel("Сумма"), 0, 0)
         layout.addWidget(QtWidgets.QLabel("Комментарий"), 1, 0)
         layout.addWidget(QtWidgets.QLabel("Категория"), 2, 0)
-        layout.addWidget(QtWidgets.QLabel("Название новой категории"), 4, 0)
+        layout.addWidget(QtWidgets.QLabel("Дата"), 3, 0)
+        layout.addWidget(QtWidgets.QLabel("Название новой категории"), 5, 0)
 
         self.edit_box = QtWidgets.QLineEdit()
         self.edit_box.setPlaceholderText("0")
@@ -39,15 +40,18 @@ class AddExpensesWidget(QtWidgets.QWidget):
         self.edit_category_box = QtWidgets.QLineEdit()
         self.edit_category_box.setPlaceholderText("Разное")
 
+        self.edit_date = QtWidgets.QDateTimeEdit(QtCore.QDateTime.currentDateTime())
+
         layout.addWidget(self.edit_box, 0, 1, 1, 3)
         layout.addWidget(self.edit_comment_box, 1, 1, 1, 3)
         layout.addWidget(self.categories_list_widget, 2, 1, 1, 3)
-        layout.addWidget(self.add_button, 3, 1)
-        layout.addWidget(self.edit_expense_button, 3, 2)
-        layout.addWidget(self.del_button, 3, 3)
-        layout.addWidget(self.edit_category_box, 4, 1, 1, 3)
-        layout.addWidget(self.add_comment_button, 5, 1)
-        layout.addWidget(self.edit_comment_button, 5, 2)
-        layout.addWidget(self.del_comment_button, 5, 3)
+        layout.addWidget(self.add_button, 4, 1)
+        layout.addWidget(self.edit_expense_button, 4, 2)
+        layout.addWidget(self.del_button, 4, 3)
+        layout.addWidget(self.edit_category_box, 5, 1, 1, 3)
+        layout.addWidget(self.add_comment_button, 6, 1)
+        layout.addWidget(self.edit_comment_button, 6, 2)
+        layout.addWidget(self.del_comment_button, 6, 3)
+        layout.addWidget(self.edit_date, 3, 1, 1, 3)
 
-        layout.addWidget(self.help_button, 6, 3)
+        layout.addWidget(self.help_button, 7, 3)
