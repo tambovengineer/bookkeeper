@@ -73,7 +73,7 @@ class Client:
             for exp_class in expenses:
                 try:
                     name = self.cat_rep.get(exp_class.category).name
-                except name is None:
+                except:
                     name = '0'
 
                 res.append([exp_class.expense_date,
@@ -332,13 +332,13 @@ class Client:
             for expense in exp_data:
                 exp_date = datetime.strptime(expense.expense_date, "%m/%d/%Y, %H:%M:%S")
 
-                if exp_date.day == current_date.day:
+                if exp_date.date() == current_date.date():
                     res.day = res.day + expense.amount
 
                 if current_date - timedelta(days=current_date.weekday()) < exp_date:
                     res.week = res.week + expense.amount
 
-                if exp_date.month == current_date.month:
+                if exp_date.month == current_date.month and exp_date.year == current_date.year:
                     res.month = res.month + expense.amount
 
         self.window.budget.set_data([str(res.day),
