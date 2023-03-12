@@ -15,13 +15,13 @@ from bookkeeper.view.message_box import MessageBox
 
 class Presenter:
     """Класс Presenter приложения"""
-    def __init__(self):
+    def __init__(self) -> None:
         self.window = MainWindow()
 
         # self.exp_rep = MemoryRepository[Expense]()
-        self.exp_rep = SQLiteRepository(db_file="mem.db", cls=Expense)
-        self.cat_rep = SQLiteRepository(db_file="mem.db", cls=Category)
-        self.budget_rep = SQLiteRepository(db_file="mem.db", cls=Budget)
+        self.exp_rep: SQLiteRepository[Expense] = SQLiteRepository(db_file="mem.db", cls=Expense)
+        self.cat_rep: SQLiteRepository[Category] = SQLiteRepository(db_file="mem.db", cls=Category)
+        self.budget_rep: SQLiteRepository[Budget] = SQLiteRepository(db_file="mem.db", cls=Budget)
 
         budget = self.budget_rep.get(pk=1)
 
@@ -34,23 +34,23 @@ class Presenter:
         self.window.add_expenses_widget.categories_list_widget\
             .insertItems(0, self.cat_to_list())
 
-        self.window.add_expenses_widget.del_button.clicked.connect(self.del_handler)
-        self.window.add_expenses_widget.add_button.clicked.connect(self.add_handler)
+        self.window.add_expenses_widget.del_button.clicked.connect(self.del_handler)  # type: ignore[attr-defined]
+        self.window.add_expenses_widget.add_button.clicked.connect(self.add_handler)  # type: ignore[attr-defined]
         self.window.add_expenses_widget.edit_expense_button\
-            .clicked.connect(self.edit_handler)
+            .clicked.connect(self.edit_handler)  # type: ignore[attr-defined]
 
         self.window.add_expenses_widget.del_comment_button\
-            .clicked.connect(self.delete_cat_handler)
+            .clicked.connect(self.delete_cat_handler)  # type: ignore[attr-defined]
         self.window.add_expenses_widget.add_comment_button\
-            .clicked.connect(self.add_cat_handler)
+            .clicked.connect(self.add_cat_handler)  # type: ignore[attr-defined]
         self.window.add_expenses_widget.edit_comment_button\
-            .clicked.connect(self.edit_cat_handler)
+            .clicked.connect(self.edit_cat_handler)  # type: ignore[attr-defined]
 
-        self.window.add_expenses_widget.help_button.clicked.connect(self.help_handler)
+        self.window.add_expenses_widget.help_button.clicked.connect(self.help_handler)   # type: ignore[attr-defined]
 
-        self.window.budget.edit_button.clicked.connect(self.edit_budget)
+        self.window.budget.edit_button.clicked.connect(self.edit_budget)  # type: ignore[attr-defined]
 
-        self.window.budget.edit_button.clicked.connect(self.calc_budget)
+        self.window.budget.edit_button.clicked.connect(self.calc_budget)  # type: ignore[attr-defined]
 
     def cat_to_list(self) -> list[str]:
         """Получение из репозитория списка категорий для виджета"""
@@ -99,7 +99,7 @@ class Presenter:
                          'Вы действительно хотите удалить выбранную запись?',
                          is_critical=False, add_cancel=True).exec()
 
-        if msg == QtWidgets.QMessageBox.Cancel:
+        if msg == QtWidgets.QMessageBox.StandardButton.Cancel:
             return
 
         row_num = self.window.expenses_widget.currentRow()
@@ -182,16 +182,19 @@ class Presenter:
 
         comment = self.window.add_expenses_widget.edit_comment_box.text()
 
-        if msg == QtWidgets.QMessageBox.Cancel:
+        if msg == QtWidgets.QMessageBox.StandardButton.Cancel:
             return
 
         row_num = self.window.expenses_widget.currentRow()
         edit_pk = self.exp_rep.get_all()[row_num].pk
 
+        num = self.window.add_expenses_widget.categories_list_widget.currentIndex()
+
+        cat_pk = self.cat_rep.get_all()[num].pk
+
         new_exp = Expense(pk=edit_pk,
                           amount=amount,
-                          category=self.window.add_expenses_widget.categories_list_widget
-                          .currentText(),
+                          category=cat_pk,
                           comment=comment)
 
         self.exp_rep.update(new_exp)
@@ -271,7 +274,7 @@ class Presenter:
                          is_critical=False,
                          add_cancel=True).exec()
 
-        if msg == QtWidgets.QMessageBox.Cancel:
+        if msg == QtWidgets.QMessageBox.StandardButton.Cancel:
             return
 
         num = self.window.add_expenses_widget.categories_list_widget.currentIndex()

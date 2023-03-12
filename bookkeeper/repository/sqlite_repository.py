@@ -76,7 +76,8 @@ class SQLiteRepository(AbstractRepository[T]):
 
             if where is not None:
                 update_q = " AND ".join([f"{field} = ?" for field in where.keys()])
-                rows = cur.execute(f'SELECT * FROM {self.table_name} WHERE {update_q}', list(where.values())).fetchall()
+                rows = cur.execute(f'SELECT * FROM {self.table_name} '
+                                   f'WHERE {update_q}', list(where.values())).fetchall()
             else:
                 rows = cur.execute(f'SELECT * FROM {self.table_name}').fetchall()
 

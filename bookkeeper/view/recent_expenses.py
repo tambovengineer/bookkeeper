@@ -2,11 +2,11 @@ from PySide6 import QtWidgets
 
 
 class RecentExpensesWidget(QtWidgets.QTableWidget):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self) -> None:
+        super().__init__()
 
-        self.setSelectionBehavior(QtWidgets.QTableWidget.SelectRows)
-        self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.setSelectionBehavior(QtWidgets.QTableWidget.SelectionBehavior.SelectRows)
+        self.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
 
         column_headers = "Дата Сумма Категория Комментарий".split()
 
@@ -16,7 +16,7 @@ class RecentExpensesWidget(QtWidgets.QTableWidget):
         self.setHorizontalHeaderLabels(column_headers)
         self.verticalHeader().hide()
 
-        self.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        self.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
 
     def set_data(self, data: list[list[str]]) -> None:
         self.setRowCount(0)

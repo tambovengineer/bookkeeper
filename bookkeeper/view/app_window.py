@@ -5,22 +5,22 @@ from bookkeeper.view.add_expenses import AddExpensesWidget
 
 
 class MainWindow(QtWidgets.QWidget):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self) -> None:
+        super().__init__()
 
         self.setWindowTitle("Bookkeeper")
         self.setFixedSize(600, 800)
 
-        self.layout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.layout)
+        layout = QtWidgets.QVBoxLayout()
+        self.setLayout(layout)
 
-        self.layout.addWidget(QtWidgets.QLabel("Расходы"))
+        layout.addWidget(QtWidgets.QLabel("Расходы"))
         self.expenses_widget = RecentExpensesWidget()
-        self.layout.addWidget(self.expenses_widget)
+        layout.addWidget(self.expenses_widget)
 
-        self.layout.addWidget(QtWidgets.QLabel("Бюджет"))
+        layout.addWidget(QtWidgets.QLabel("Бюджет"))
         self.budget = BudgetWidget()
-        self.layout.addWidget(self.budget)
+        layout.addWidget(self.budget)
 
         self.add_expenses_widget = AddExpensesWidget()
-        self.layout.addWidget(self.add_expenses_widget)
+        layout.addWidget(self.add_expenses_widget)
