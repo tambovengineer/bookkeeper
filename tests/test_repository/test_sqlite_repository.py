@@ -79,9 +79,7 @@ def test_get_all(repo, custom_class):
     objs = [custom_class() for i in range(5)]
     for obj in objs:
         repo.add(obj)
-    objs_pk = [obj.pk for obj in objs]
-    objs_get_all_pk = [obj.pk for obj in repo.get_all()]
-    assert objs_pk == objs_get_all_pk
+    assert repo.get_all() == objs
 
 
 def test_get_all_with_condition(repo, custom_class):
