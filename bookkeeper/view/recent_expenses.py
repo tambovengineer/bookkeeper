@@ -18,7 +18,8 @@ class RecentExpensesWidget(QtWidgets.QTableWidget):
         self.setHorizontalHeaderLabels(column_headers)
         self.verticalHeader().hide()
 
-        self.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.horizontalHeader()\
+            .setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
 
     def set_data(self, data: list[list[str]]) -> None:
         """Функция для записи данных в таблицу"""
