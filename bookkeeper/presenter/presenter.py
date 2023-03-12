@@ -1,7 +1,6 @@
 """Модуль описывает класс Presenter приложения"""
 
-import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from PySide6 import QtWidgets, QtGui
 from bookkeeper.view.app_window import MainWindow
@@ -15,13 +14,23 @@ from bookkeeper.view.message_box import MessageBox
 
 class Presenter:
     """Класс Presenter приложения"""
+
     def __init__(self) -> None:
         self.window = MainWindow()
 
         # self.exp_rep = MemoryRepository[Expense]()
-        self.exp_rep: SQLiteRepository[Expense] = SQLiteRepository(db_file="mem.db", cls=Expense)
-        self.cat_rep: SQLiteRepository[Category] = SQLiteRepository(db_file="mem.db", cls=Category)
-        self.budget_rep: SQLiteRepository[Budget] = SQLiteRepository(db_file="mem.db", cls=Budget)
+        self.exp_rep: SQLiteRepository[Expense] = SQLiteRepository(
+            db_file="mem.db", cls=Expense)
+        self.cat_rep: SQLiteRepository[Category] = SQLiteRepository(
+            db_file="mem.db", cls=Category)
+        self.budget_rep: SQLiteRepository[Budget] = SQLiteRepository(
+            db_file="mem.db", cls=Budget)
+
+        if self.cat_rep.get_all() is None:
+            self.cat_rep.add(Category('Разное', None))
+
+        if self.budget_rep.get_all() is None:
+            self.budget_rep.add(Budget())
 
         budget = self.budget_rep.get(pk=1)
 
@@ -31,26 +40,33 @@ class Presenter:
 
         self.window.expenses_widget.set_data(self.exp_to_list())
         self.window.add_expenses_widget.categories_list_widget.clear()
-        self.window.add_expenses_widget.categories_list_widget\
+        self.window.add_expenses_widget.categories_list_widget \
             .insertItems(0, self.cat_to_list())
 
-        self.window.add_expenses_widget.del_button.clicked.connect(self.del_handler)  # type: ignore[attr-defined]
-        self.window.add_expenses_widget.add_button.clicked.connect(self.add_handler)  # type: ignore[attr-defined]
-        self.window.add_expenses_widget.edit_expense_button\
+        self.window.add_expenses_widget.del_button.\
+            clicked.connect(self.del_handler)  # type: ignore[attr-defined]
+        self.window.add_expenses_widget.add_button.\
+            clicked.connect(self.add_handler)  # type: ignore[attr-defined]
+        self.window.add_expenses_widget.edit_expense_button \
             .clicked.connect(self.edit_handler)  # type: ignore[attr-defined]
 
-        self.window.add_expenses_widget.del_comment_button\
+        self.window.add_expenses_widget.del_comment_button \
             .clicked.connect(self.delete_cat_handler)  # type: ignore[attr-defined]
-        self.window.add_expenses_widget.add_comment_button\
+        self.window.add_expenses_widget.add_comment_button \
             .clicked.connect(self.add_cat_handler)  # type: ignore[attr-defined]
-        self.window.add_expenses_widget.edit_comment_button\
+        self.window.add_expenses_widget.edit_comment_button \
             .clicked.connect(self.edit_cat_handler)  # type: ignore[attr-defined]
 
-        self.window.add_expenses_widget.help_button.clicked.connect(self.help_handler)   # type: ignore[attr-defined]
+        self.window.add_expenses_widget.help_button.\
+            clicked.connect(self.help_handler)  # type: ignore[attr-defined]
 
-        self.window.budget.edit_button.clicked.connect(self.edit_budget)  # type: ignore[attr-defined]
+        self.window.budget.edit_button.\
+            clicked.connect(self.edit_budget)  # type: ignore[attr-defined]
 
-        self.window.budget.edit_button.clicked.connect(self.calc_budget)  # type: ignore[attr-defined]
+        self.window.budget.edit_button.\
+            clicked.connect(self.calc_budget)  # type: ignore[attr-defined]
+
+        self.calc_budget()
 
     def cat_to_list(self) -> list[str]:
         """Получение из репозитория списка категорий для виджета"""
@@ -61,7 +77,6 @@ class Presenter:
             for cat in cat_list:
                 res.append(cat.name)
 
-
         return res
 
     def exp_to_list(self) -> list[list[str]]:
@@ -70,10 +85,7 @@ class Presenter:
         expenses = self.exp_rep.get_all()
         if expenses is not None:
             for exp_class in expenses:
-                try:
-                    name = self.cat_rep.get(exp_class.category).name
-                except:
-                    name = '0'
+                name = self.cat_rep.get(exp_class.category).name
 
                 res.append([exp_class.expense_date,
                             str(exp_class.amount),
@@ -131,13 +143,17 @@ class Presenter:
 
         comment = self.window.add_expenses_widget.edit_comment_box.text()
 
+        date = self.window.add_expenses_widget.edit_date\
+            .dateTime().toPython().strftime("%m/%d/%Y, %H:%M:%S")
+
         num = self.window.add_expenses_widget.categories_list_widget.currentIndex()
 
         cat_pk = self.cat_rep.get_all()[num].pk
 
         new_exp = Expense(amount=amount,
                           category=cat_pk,
-                          comment=comment)
+                          comment=comment,
+                          expense_date=date)
         self.exp_rep.add(new_exp)
         self.window.expenses_widget.set_data(self.exp_to_list())
 
@@ -175,7 +191,7 @@ class Presenter:
                        is_critical=True, add_cancel=False).exec()
             return
 
-        msg = MessageBox('Удаление записи',
+        msg = MessageBox('Изменение записи',
                          'Вы действительно хотите изменить выбранную запись?',
                          is_critical=False,
                          add_cancel=True).exec()
@@ -188,6 +204,9 @@ class Presenter:
         row_num = self.window.expenses_widget.currentRow()
         edit_pk = self.exp_rep.get_all()[row_num].pk
 
+        date = self.window.add_expenses_widget.edit_date\
+            .dateTime().toPython().strftime("%m/%d/%Y, %H:%M:%S")
+
         num = self.window.add_expenses_widget.categories_list_widget.currentIndex()
 
         cat_pk = self.cat_rep.get_all()[num].pk
@@ -195,6 +214,7 @@ class Presenter:
         new_exp = Expense(pk=edit_pk,
                           amount=amount,
                           category=cat_pk,
+                          expense_date=date,
                           comment=comment)
 
         self.exp_rep.update(new_exp)
@@ -205,10 +225,13 @@ class Presenter:
     def help_handler(self) -> None:
         """Обработчик кнопки вызова справки"""
 
+        help_text = "Программа ведения расходов.\n" \
+                    "Для изменения / удаления записи" \
+                    " или органичения бюджета выберите ее в таблице.\n"
+
         dialog = QtWidgets.QMessageBox()
         dialog.setWindowTitle("Справка")
-        dialog.setText("Jnxtyjhgsgfsh gfsghskds \n \
-                     hjashfjhdaskhdsjhdfshdsods")
+        dialog.setText(help_text)
 
         dialog.exec()
 
@@ -230,7 +253,7 @@ class Presenter:
         self.cat_rep.add(Category(txt, None))
 
         self.window.add_expenses_widget.categories_list_widget.clear()
-        self.window.add_expenses_widget.categories_list_widget\
+        self.window.add_expenses_widget.categories_list_widget \
             .insertItems(0, self.cat_to_list())
 
     def edit_cat_handler(self) -> None:
@@ -255,9 +278,9 @@ class Presenter:
         new_cat.pk = edit_pk
         self.cat_rep.update(new_cat)
 
-        self.window.add_expenses_widget.categories_list_widget\
+        self.window.add_expenses_widget.categories_list_widget \
             .clear()
-        self.window.add_expenses_widget.categories_list_widget\
+        self.window.add_expenses_widget.categories_list_widget \
             .insertItems(0, self.cat_to_list())
 
     def delete_cat_handler(self) -> None:
@@ -282,16 +305,15 @@ class Presenter:
 
         self.cat_rep.delete(del_pk)
 
-        self.window.add_expenses_widget.categories_list_widget\
+        self.window.add_expenses_widget.categories_list_widget \
             .clear()
-        self.window.add_expenses_widget.categories_list_widget\
+        self.window.add_expenses_widget.categories_list_widget \
             .insertItems(0, self.cat_to_list())
 
-        exp_list = self.exp_rep.get_all()  # REDO!!!
+        exp_list = self.exp_rep.get_all()  # REDO !!!
 
         for expense in exp_list:
             if expense.category == del_pk:
-                print(expense)
                 self.exp_rep.delete(expense.pk)
 
         self.window.expenses_widget.set_data(self.exp_to_list())
@@ -303,16 +325,40 @@ class Presenter:
 
         row_num = self.window.budget.table_widget.currentRow()
 
-        enter_sum = float(self.window.budget.edit_box.text())
+        enter_sum = self.window.budget.edit_box.text()
+
+        if row_num == -1:
+            MessageBox('Ошибка', 'Выберите строку для исправления.',
+                       is_critical=True, add_cancel=False).exec()
+            return
+
+        try:
+            amount = float(enter_sum)
+        except ValueError:
+            MessageBox('Ошибка',
+                       'Сумма должна быть числом.',
+                       is_critical=True, add_cancel=False).exec()
+            return
+
+        if amount <= 0:
+            MessageBox('Ошибка',
+                       'Сумма должна быть положительной.',
+                       is_critical=True, add_cancel=False).exec()
+            return
+
+        MessageBox('Изменение записи',
+                   'Вы действительно хотите изменить выбранную запись?',
+                   is_critical=False,
+                   add_cancel=True).exec()
 
         budget = self.budget_rep.get(pk=1)
 
         if row_num == 0:
-            budget.day = enter_sum
+            budget.day = amount
         elif row_num == 1:
-            budget.week = enter_sum
+            budget.week = amount
         elif row_num == 2:
-            budget.month = enter_sum
+            budget.month = amount
 
         self.budget_rep.update(budget)
 
@@ -337,10 +383,12 @@ class Presenter:
                 if exp_date.date() == current_date.date():
                     res.day = res.day + expense.amount
 
-                if current_date - timedelta(days=current_date.weekday()) < exp_date:
+                if datetime.combine(current_date, time.min) \
+                        - timedelta(days=current_date.weekday()) <= exp_date:
                     res.week = res.week + expense.amount
 
-                if exp_date.month == current_date.month and exp_date.year == current_date.year:
+                if exp_date.month == current_date.month \
+                        and exp_date.year == current_date.year:
                     res.month = res.month + expense.amount
 
         self.window.budget.set_data([str(res.day),
@@ -348,22 +396,22 @@ class Presenter:
                                      str(res.month)], column=0)
 
         if res.day > self.budget_rep.get(pk=1).day:
-            self.window.budget.table_widget.item(0, 1)\
+            self.window.budget.table_widget.item(0, 1) \
                 .setBackground(QtGui.QColor(255, 0, 0))
         else:
-            self.window.budget.table_widget.item(0, 1)\
+            self.window.budget.table_widget.item(0, 1) \
                 .setBackground(QtGui.QColor(255, 255, 255))
 
         if res.week > self.budget_rep.get(pk=1).week:
-            self.window.budget.table_widget.item(1, 1)\
+            self.window.budget.table_widget.item(1, 1) \
                 .setBackground(QtGui.QColor(255, 0, 0))
         else:
-            self.window.budget.table_widget.item(1, 1)\
+            self.window.budget.table_widget.item(1, 1) \
                 .setBackground(QtGui.QColor(255, 255, 255))
 
         if res.month > self.budget_rep.get(pk=1).month:
-            self.window.budget.table_widget.item(2, 1)\
+            self.window.budget.table_widget.item(2, 1) \
                 .setBackground(QtGui.QColor(255, 0, 0))
         else:
-            self.window.budget.table_widget.item(2, 1)\
+            self.window.budget.table_widget.item(2, 1) \
                 .setBackground(QtGui.QColor(255, 255, 255))
