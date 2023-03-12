@@ -21,12 +21,17 @@ class BudgetTable(QtWidgets.QTableWidget):
         self.setHorizontalHeaderLabels(column_headers)
         self.setVerticalHeaderLabels(row_headers)
 
-        self.verticalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self.verticalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self.verticalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.verticalHeader()\
+            .setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.verticalHeader()\
+            .setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.verticalHeader()\
+            .setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Stretch)
 
-        self.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.horizontalHeader()\
+            .setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.horizontalHeader()\
+            .setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.Stretch)
 
 
 class BudgetWidget(QtWidgets.QWidget):
