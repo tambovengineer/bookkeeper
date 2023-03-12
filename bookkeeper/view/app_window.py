@@ -1,3 +1,4 @@
+"""Модуль виджета окна приложения"""
 from PySide6 import QtWidgets
 from bookkeeper.view.budget import BudgetWidget
 from bookkeeper.view.recent_expenses import RecentExpensesWidget
@@ -5,6 +6,7 @@ from bookkeeper.view.add_expenses import AddExpensesWidget
 
 
 class MainWindow(QtWidgets.QWidget):
+    """Класс виджета окна приложения"""
     def __init__(self) -> None:
         super().__init__()
 

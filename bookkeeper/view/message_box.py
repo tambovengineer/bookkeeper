@@ -1,7 +1,9 @@
+"""Модуль диалогового окна"""
 from PySide6 import QtWidgets
 
 
 class MessageBox(QtWidgets.QMessageBox):
+    """Класс диалогового окна"""
     def __init__(self,
                  window_title: str = 'window',
                  message: str = 'message',

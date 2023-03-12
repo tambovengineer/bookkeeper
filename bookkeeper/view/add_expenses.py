@@ -1,7 +1,9 @@
+"""Модуль виджета редактирования категорий и записей о расходах"""
 from PySide6 import QtWidgets
 
 
 class AddExpensesWidget(QtWidgets.QWidget):
+    """Класс виджета таблицы бюджета"""
     def __init__(self) -> None:
         super().__init__()
 

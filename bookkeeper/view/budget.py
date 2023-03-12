@@ -1,7 +1,9 @@
+"""Модуль виджета таблицы бюджета"""
 from PySide6 import QtWidgets
 
 
 class BudgetTable(QtWidgets.QTableWidget):
+    """Класс виджета таблицы бюджета"""
     def __init__(self) -> None:
         super().__init__()
 
@@ -28,6 +30,7 @@ class BudgetTable(QtWidgets.QTableWidget):
 
 
 class BudgetWidget(QtWidgets.QWidget):
+    """Класс виджета интерфейса бюджета расходов"""
     def __init__(self) -> None:
         super().__init__()
 
@@ -45,5 +48,6 @@ class BudgetWidget(QtWidgets.QWidget):
         layout.addWidget(self.edit_button, 1, 2)
 
     def set_data(self, data: list[str], column: int = 1) -> None:
+        """Функция для записи данных в таблицу"""
         for j, sums in enumerate(data):
             self.table_widget.setItem(j, column, QtWidgets.QTableWidgetItem(sums))

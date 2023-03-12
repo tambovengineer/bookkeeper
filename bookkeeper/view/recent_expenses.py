@@ -1,7 +1,9 @@
+"""Модуль виджета таблицы расходов"""
 from PySide6 import QtWidgets
 
 
 class RecentExpensesWidget(QtWidgets.QTableWidget):
+    """Класс виджета таблицы расходов"""
     def __init__(self) -> None:
         super().__init__()
 
@@ -19,6 +21,7 @@ class RecentExpensesWidget(QtWidgets.QTableWidget):
         self.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeMode.Stretch)
 
     def set_data(self, data: list[list[str]]) -> None:
+        """Функция для записи данных в таблицу"""
         self.setRowCount(0)
         self.setRowCount(len(data))
 
