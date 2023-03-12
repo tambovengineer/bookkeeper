@@ -2,7 +2,11 @@ from PySide6 import QtWidgets
 
 
 class MessageBox(QtWidgets.QMessageBox):
-    def __init__(self, window_title='window', message='message', is_critical=False, add_cancel=False):
+    def __init__(self,
+                 window_title='window',
+                 message='message',
+                 is_critical=False,
+                 add_cancel=False) -> None:
         super().__init__()
 
         self.setWindowTitle(window_title)
