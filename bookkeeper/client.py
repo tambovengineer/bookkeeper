@@ -10,4 +10,4 @@ app = QtWidgets.QApplication(sys.argv)
 
 client = Presenter()
 client.window.show()
-app.exec()
+sys.exit(app.exec())

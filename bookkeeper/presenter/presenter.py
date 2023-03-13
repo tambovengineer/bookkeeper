@@ -283,6 +283,8 @@ class Presenter:
         self.window.add_expenses_widget.categories_list_widget \
             .insertItems(0, self.cat_to_list())
 
+        self.window.expenses_widget.set_data(self.exp_to_list())
+
     def delete_cat_handler(self) -> None:
         """Обработчик кнопки удаления категории"""
 
